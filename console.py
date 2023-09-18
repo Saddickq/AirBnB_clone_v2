@@ -19,16 +19,16 @@ class HBNBCommand(cmd.Cmd):
     prompt = '(hbnb) ' if sys.__stdin__.isatty() else ''
 
     classes = {
-               'BaseModel': BaseModel, 'User': User, 'Place': Place,
-               'State': State, 'City': City, 'Amenity': Amenity,
-               'Review': Review
-              }
+        'BaseModel': BaseModel, 'User': User, 'Place': Place,
+        'State': State, 'City': City, 'Amenity': Amenity,
+        'Review': Review
+    }
     dot_cmds = ['all', 'count', 'show', 'destroy', 'update']
     types = {
-             'number_rooms': int, 'number_bathrooms': int,
-             'max_guest': int, 'price_by_night': int,
-             'latitude': float, 'longitude': float
-            }
+        'number_rooms': int, 'number_bathrooms': int,
+        'max_guest': int, 'price_by_night': int,
+        'latitude': float, 'longitude': float
+    }
 
     def preloop(self):
         """Prints if isatty is false"""
@@ -118,7 +118,7 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print("** class name missing **")
             return
-        
+
         """split parameters from object name"""
         param_args = args.split()
         right_args = param_args[1:]
@@ -126,35 +126,35 @@ class HBNBCommand(cmd.Cmd):
 
         param_dict = {}
         for params in right_args:
-            """further split right params into 
+            """further split right params into
             2 based on the delimeter ="""
             k, v = params.split("=")
             if v.startswith('"') and v.endswith('"'):
-                """after spliting convert the value 
+                """after spliting convert the value
                 to string before passing to dict
                 and escape all non string double quotes
                 in the value string"""
-            
+
                 param_dict[k] = str(v).strip('"').replace('_', ' ')
             else:
                 try:
                     if '.' in v:
                         param_dict[k] = float(v)
                     else:
-                        param_dict[k] = int(v)    
+                        param_dict[k] = int(v)
                 except ValueError:
-                    pass 
+                    pass
 
         if left_arg not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        
+
         else:
             new_instance = HBNBCommand.classes[left_arg](**param_dict)
             storage.save()
             print(new_instance.id)
             storage.save()
-        
+
     def help_create(self):
         """ Help information for the create method """
         print("Creates a class of any type")
@@ -216,7 +216,7 @@ class HBNBCommand(cmd.Cmd):
         key = c_name + "." + c_id
 
         try:
-            del(storage.all()[key])
+            del (storage.all()[key])
             storage.save()
         except KeyError:
             print("** no instance found **")
@@ -348,6 +348,7 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
