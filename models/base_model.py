@@ -4,8 +4,10 @@ import uuid
 from datetime import datetime
 from models import storage
 
+
 class BaseModel:
     """A base class for all hbnb models"""
+
     def __init__(self, *args, **kwargs):
         """Instantiates a new model"""
         if not kwargs:
@@ -15,10 +17,10 @@ class BaseModel:
         else:
             if kwargs.get('updated_at') or kwargs.get('created_at'):
                 kwargs['updated_at'] = datetime.strptime(kwargs['updated_at'],
-                                                        '%Y-%m-%dT%H:%M:%S.%f')
+                                                         '%Y-%m-%dT%H:%M:%S.%f')
                 kwargs['created_at'] = datetime.strptime(kwargs['created_at'],
-                                                        '%Y-%m-%dT%H:%M:%S.%f')
-                
+                                                         '%Y-%m-%dT%H:%M:%S.%f')
+
             if kwargs.get('__class__'):
                 del kwargs["__class__"]
             self.id = str(uuid.uuid4())
