@@ -1,17 +1,14 @@
 #!/usr/bin/python3
 """ State Module for HBNB project """
 from models.base_model import BaseModel
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, String, ForeignKey
+from sqlalchemy.orm import relationship
+
+Base = declarative_base()
 
 
-class State(BaseModel):
+class State(BaseModel, Base):
     """ State class """
-    name = ""
-
-    def __init__(self, *args, **kwargs):
-            """Instantiates a new Place"""
-            super().__init__(*args, **kwargs)
-
-            # Handle unknown attributes
-            for key, value in kwargs.items():
-                if key not in dir(self):
-                    setattr(self, key, value)
+    __tablename__ = 'states'
+    name = Column(String(128), nullable=False)
