@@ -12,14 +12,14 @@ class FileStorage():
         """Returns a dictionary of all objects, or a filtered dictionary"""
         if cls is None:
             return self.__objects
-        filteredobjs = {}
+        filtered_objs = {}
         """iterates through Filestorage.objects and checks
-        whether its value matches that of the specified class, 
+        whether its value matches that of the specified class,
         i.e cls."""
-        for k, v in FileStorage.__objects.items():
-            if isinstance(v, cls):
-                filteredobjs[k] = FileStorage.__objects[k]
-        return (filteredobjs)
+        for key, obj in FileStorage.__objects.items():
+            if isinstance(obj, cls):
+                filtered_objs[key] = FileStorage.__objects[key]
+        return (filtered_objs)
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
@@ -59,11 +59,10 @@ class FileStorage():
             pass
 
     def delete(self, obj=None):
-        """deletes the speified object if it is found in 
+        """deletes the speified object if it is found in
         the File storage,object, if nothing is passsed
         continues as it is"""
-        if obj == None:
-            pass
-        k = obj.__class__.__name__ + '.' + obj.id
-        if k in FileStorage.__objects:
-            del FileStorage.__objects[k]
+        if obj is not None:
+            k = "{}.{}".format(obj.__class__.__name__, obj.id)
+            if k in FileStorage.__objects.keys():
+                del FileStorage.__objects[k]
