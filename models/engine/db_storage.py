@@ -29,6 +29,7 @@ class DBStorage():
     }
 
     def __init__(self):
+        """database storage"""
         user = os.getenv("HBNB_MYSQL_USER")
         pwd = os.getenv("HBNB_MYSQL_PWD")
         database = os.getenv("HBNB_MYSQL_DB")
@@ -44,7 +45,7 @@ class DBStorage():
             Base.metadata.dropall(self.__engine)
 
     def all(self, cls=None):
-
+        """query database for all types of objects"""
         self.__session = Session(self.__engine)
         query_dict = {}
         if cls is None:
