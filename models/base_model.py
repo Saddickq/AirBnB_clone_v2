@@ -3,10 +3,6 @@
 import uuid
 from datetime import datetime
 from models import storage
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, ForeignKey
-
-Base = declarative_base()
 
 
 class BaseModel:
@@ -31,6 +27,7 @@ class BaseModel:
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
             self.__dict__.update(kwargs)
+        storage.new(self)
 
     def __str__(self):
         """Returns a string representation of the instance"""
@@ -41,17 +38,14 @@ class BaseModel:
         """Updates updated_at with current time when instance is changed"""
         from models import storage
         self.updated_at = datetime.now()
-        storage.new(self)
         storage.save()
 
     def to_dict(self):
         """Convert instance into dict format"""
         dictionary = {}
-        if '_sa_instance_state' in dictionary:
-            del dictionary['_sa_instance_state']
-            dictionary.update(self.__dict__)
-            dictionary.update({'__class__':
-                               (str(type(self)).split('.')[-1]).split('\'')[0]})
-            dictionary['created_at'] = self.created_at.isoformat()
-            dictionary['updated_at'] = self.updated_at.isoformat()
-            return dictionary
+        dictionary.update(self.__dict__)
+        dictionary.update({'__class__':
+                          (str(type(self)).split('.')[-1]).split('\'')[0]})
+        dictionary['created_at'] = self.created_at.isoformat()
+        dictionary['updated_at'] = self.updated_at.isoformat()
+        return dictionary
