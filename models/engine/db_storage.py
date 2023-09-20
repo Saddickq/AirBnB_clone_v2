@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """ State Module for HBNB project """
-from models.base_model import BaseModel
+from models.base_model import BaseModel, Base
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, String, ForeignKey, create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
@@ -11,8 +11,6 @@ from models.city import City
 from models.amenity import Amenity
 from models.review import Review
 from os import getenv
-
-Base = declarative_base()
 
 
 class DBStorage():
