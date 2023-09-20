@@ -49,16 +49,16 @@ class DBStorage():
         try:
             if cls is None:
                 for clas in DBStorage.classes.values():
-                    objects = self.__session.query(clas).all()
-                    for object in objects:
-                        key = "{}.{}".format(object.__class__.__name__, object.id)
-                        query_dict[key] = object
+                    objects = self.__session.query(clas)
+                    for objc in objects:
+                        key = "{}.{}".format(objc.__class__.__name__, objc.id)
+                        query_dict[key] = objc
             else:
                 if cls in DBStorage.classes.values():
                     objects = self.__session.query(cls).all()
-                    for object in objects:
-                        key = "{}.{}".format(object.__class__.__name__, object.id)
-                        query_dict[key] = object
+                    for objc in objects:
+                        key = "{}.{}".format(objc.__class__.__name__, objc.id)
+                        query_dict[key] = objc
             return query_dict
         except Exception as error:
             print(f"An ERROR occurred: {error}")
@@ -68,10 +68,10 @@ class DBStorage():
 
     def new(self, obj):
         """ add the object to the current database session """
+        Session = sessionmaker(bind=self.__engine)
         self.__session = Session()
         try:
-            new_obj = obj.__class__.__name__(obj)
-            self.__session.add(new_obj)
+            self.__session.add(obj)
         except Exception as error:
             print(f"An ERROR occurred: {error}")
             self.__session.rollback()
@@ -80,6 +80,7 @@ class DBStorage():
 
     def save(self):
         """ commit all changes of the current database session """
+        Session = sessionmaker(bind=self.__engine)
         self.__session = Session()
         try:
             self.__session.commit()
@@ -90,6 +91,7 @@ class DBStorage():
 
     def delete(self, obj=None):
         """ delete from the current database session"""
+        Session = sessionmaker(bind=self.__engine)
         self.__session = Session()
         if obj:
             try:
@@ -107,12 +109,3 @@ class DBStorage():
 
         session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
         self.__session = scoped_session(session_factory)
-
-
-class Place(BaseModel, Base):
-    """Place class"""
-    __tablename__ = 'places'
-
-    reviews = relationship('Review',
-                           backref='place',
-                           cascade='all, delete-orphan')
