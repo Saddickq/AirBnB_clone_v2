@@ -1,6 +1,11 @@
 #!/usr/bin/python3
 """This module defines a class to manage file storage for hbnb clone"""
 import json
+from models.base_model import BaseModel, Base
+from models.place import Place
+from models.review import Review
+from models import storage
+from sqlalchemy.orm import relationship
 
 
 class FileStorage():
@@ -66,3 +71,23 @@ class FileStorage():
             k = "{}.{}".format(obj.__class__.__name__, obj.id)
             if k in FileStorage.__objects.keys():
                 del FileStorage.__objects[k]
+
+
+class Place(BaseModel, Base):
+    """Place class for FileStorage"""
+    __tablename__ = 'places'
+
+    @property
+    def reviews(self):
+        """Getter attribute that returns reviews whose 
+        id matches place_id"""
+        matched_results = []
+        """get all the review objects i teh review file"""
+        reviews = Review.query.all()
+        for review in reviews.values():
+            """if review models place id matches the id of 
+            the current place id return those particular 
+            objects or instances"""
+            if review.place_id == self.id:
+                matched_results.append(review)
+        return matched_results

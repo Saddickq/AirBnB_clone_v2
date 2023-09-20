@@ -11,6 +11,7 @@ from models.city import City
 from models.amenity import Amenity
 from models.review import Review
 from os import getenv
+from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
@@ -108,3 +109,12 @@ class DBStorage():
 
         session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
         self.__session = scoped_session(session_factory)
+
+
+class Place(BaseModel, Base):
+    """Place class"""
+    __tablename__ = 'places'
+
+    reviews = relationship('Review',
+                           backref='place',
+                           cascade='all, delete-orphan')
