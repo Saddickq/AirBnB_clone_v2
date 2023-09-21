@@ -20,9 +20,8 @@ class DBStorage():
     __session = None
 
     classes = {
-        'BaseModel': BaseModel, 'User': User, 'Place': Place,
-        'State': State, 'City': City, 'Amenity': Amenity,
-        'Review': Review
+        'User': User, 'Place': Place, 'State': State,
+        'City': City, 'Review': Review
     }
 
     def __init__(self):
@@ -34,9 +33,12 @@ class DBStorage():
         host = getenv("HBNB_MYSQL_HOST")
         storage_type = getenv("HBNB_TYPE_STORAGE")
 
-        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.
-                                      format(user, pwd, host, database),
-                                      pool_pre_ping=True)
+        try:
+            self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.
+                                          format(user, pwd, host, database),
+                                          pool_pre_ping=True)
+        except Exception as error:
+            print(error)
 
         if env_test == 'test':
             Base.metadata.drop_all(self.__engine)
@@ -46,66 +48,42 @@ class DBStorage():
         Session = sessionmaker(bind=self.__engine)
         self.__session = Session()
         query_dict = {}
-        try:
-            if cls is None:
-                for clas in DBStorage.classes.values():
-                    objects = self.__session.query(clas)
-                    for objc in objects:
-                        key = "{}.{}".format(objc.__class__.__name__, objc.id)
-                        query_dict[key] = objc
-            else:
-                if cls in DBStorage.classes.values():
-                    objects = self.__session.query(cls).all()
-                    for objc in objects:
-                        key = "{}.{}".format(objc.__class__.__name__, objc.id)
-                        query_dict[key] = objc
-            return query_dict
-        except Exception as error:
-            print(f"An ERROR occurred: {error}")
-            self.__session.rollback()
-        finally:
-            self.__session.close()
+        if cls is None:
+            for clas in DBStorage.classes.values():
+                objects = self.__session.query(clas).all()
+                for objc in objects:
+                    key = "{}.{}".format(objc.__class__.__name__, objc.id)
+                    query_dict[key] = objc
+        else:
+            if cls in DBStorage.classes.values():
+                objects = self.__session.query(cls).all()
+                for objc in objects:
+                    key = "{}.{}".format(objc.__class__.__name__, objc.id)
+                    query_dict[key] = objc
+        return query_dict
 
     def new(self, obj):
         """ add the object to the current database session """
-        Session = sessionmaker(bind=self.__engine)
-        self.__session = Session()
-        try:
+        if obj is not None:
             self.__session.add(obj)
-        except Exception as error:
-            print(f"An ERROR occurred: {error}")
-            self.__session.rollback()
-        finally:
-            self.__session.close()
 
     def save(self):
         """ commit all changes of the current database session """
-        Session = sessionmaker(bind=self.__engine)
-        self.__session = Session()
-        try:
-            self.__session.commit()
-        except Exception:
-            pass
-        finally:
-            self.__session.close()
+        self.__session.commit()
 
     def delete(self, obj=None):
         """ delete from the current database session"""
-        Session = sessionmaker(bind=self.__engine)
-        self.__session = Session()
         if obj:
-            try:
-                cls = type(obj)
-                self.__session.query(cls).filter(cls.id == obj.id).delete()
-            except Exception as error:
-                self.__session.rollback()
-                print(f"An ERROR occured: {error}")
-            finally:
-                self.__session.close()
-    
+            cls = type(obj)
+            self.__session.query(cls).filter(cls.id == obj.id).delete()
+
     def reload(self):
         """ create all tables in the database """
         Base.metadata.create_all(self.__engine)
-
-        session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        session_factory = sessionmaker(bind=self.__engine,
+                                       expire_on_commit=False)
         self.__session = scoped_session(session_factory)
+
+    def close(self):
+        """close a session"""
+        self.__session.close()
