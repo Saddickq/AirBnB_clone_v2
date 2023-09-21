@@ -3,17 +3,13 @@
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, ForeignKey, Integer, Float
 from sqlalchemy.orm import relationship
-from models import storage_type
+import os
 
 
 class Place(BaseModel, Base):
     """ Class for Place Module """
     __tablename__ = "places"
-<<<<<<< HEAD
     if os.getenv('HBNB_TYPE_STORAGE') == 'db':
-=======
-    if storage_type == 'db':
->>>>>>> cf9ab4e566992767b58b2ccaf7f081b936de7604
         city_id = Column(String(60), ForeignKey("cities.id"), nullable=False)
         user_id = Column(String(60), ForeignKey("users.id"), nullable=False)
         name = Column(String(128), nullable=False)
