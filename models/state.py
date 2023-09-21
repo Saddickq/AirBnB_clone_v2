@@ -14,3 +14,10 @@ class State(BaseModel, Base):
                       nullable=False)
     else:
         name = ""
+
+        @property
+        def cities(self):
+            """ Returns a list of city objects """
+            from models import storage
+            cities = storage.all(City).values()
+            return list(filter(lambda city: city.state_id == self.id, cities))
