@@ -50,4 +50,3 @@ class Place(BaseModel, Base):
                 if review.place_id == self.id:
                     matched_results.append(review)
             return matched_results
-        amenity_ids = []

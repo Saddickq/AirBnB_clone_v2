@@ -20,3 +20,8 @@ class User(BaseModel, Base):
         reviews = relationship('Review',
                                backref='user',
                                cascade='all, delete-orphan')
+    else:
+        email = ""
+        password = ""
+        first_name = ""
+        last_name = ""
