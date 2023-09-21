@@ -9,7 +9,7 @@ import os
 class Place(BaseModel, Base):
     """ Class for Place Module """
     __tablename__ = "places"
-    if os.getenv("HBNB_TYPE_STORAGE") == 'db':
+    if os.getenv('HBNB_TYPE_STORAGE') == 'db':
         city_id = Column(String(60), ForeignKey("cities.id"), nullable=False)
         user_id = Column(String(60), ForeignKey("users.id"), nullable=False)
         name = Column(String(128), nullable=False)

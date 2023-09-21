@@ -4,13 +4,14 @@ from models.base_model import BaseModel, Base
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
+import os
 
 
 class Review(BaseModel, Base):
     """Review class"""
     __tablename__ = 'reviews'
 
-    if getenv("HBNB_STORAGE_TYPE") == "db":
+    if os.getenv('HBNB_TYPE_STORAGE') == "db":
         text = Column(String(1024),
                       nullable=False)
         place_id = Column(String(60),
