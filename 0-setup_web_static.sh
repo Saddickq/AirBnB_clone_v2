@@ -8,7 +8,7 @@ sudo mkdir -p /data/web_static/shared/
 sudo mkdir -p /data/web_static/releases/test/
 sudo chown -R "$USER":"$USER" /data
 touch /data/web_static/releases/test/index.html
-cd /data/web_static/releases/test/
+cd /data/web_static/releases/test/ || exit
 echo "<html>
   <head>
   </head>
