@@ -13,9 +13,9 @@ def do_pack():
 
     try:
         local('mkdir -p versions/')
-        time = datatime.now().strftime('%Y%m%d%H%M%S')
-        archive = "versions/web_static_{}.tgz".format(time)
-        local('tar -cvzf {} web_static/'.format(archive))
+        time = datetime.now().strftime('%Y%m%d%H%M%S')
+        archive = "web_static_{}.tgz".format(time)
+        local('tar -cvzf versions/{} web_static'.format(archive))
     except Exception:
         return None
     else:
