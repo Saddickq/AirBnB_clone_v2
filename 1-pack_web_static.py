@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 from fabric.api import run, local
 from datetime import datetime
 """
