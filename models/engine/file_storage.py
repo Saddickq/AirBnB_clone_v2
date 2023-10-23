@@ -69,3 +69,8 @@ class FileStorage():
             k = "{}.{}".format(obj.__class__.__name__, obj.id)
             if k in FileStorage.__objects.keys():
                 del FileStorage.__objects[k]
+
+    def close(self):
+        """method for deserializing the JSON file to objects
+        """
+        self.reload()
